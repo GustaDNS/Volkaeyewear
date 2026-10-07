@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VOLKA - Look Again. Coming Soon. Canal institucional para parceiros e fornecedores.">
+  <title>VOLKA | Look Again</title>
+
+  <!-- Preload da imagem hero para máxima performance -->
+  <link rel="preload" as="image" href="assets/hero.png">
+  
+  <!-- Fontes Google Inter para o formulário de credenciamento -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0a09;
+      --text-light: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --accent-gold: #c5a059;
+      --accent-gold-hover: #e0b86c;
+      --glass-bg: rgba(18, 17, 16, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      font-family: var(--font-sans);
+      color: var(--text-light);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container principal ocupando 100% exato da viewport de lado a lado */
+    .hero-viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Imagem em tela cheia (100% de lado a lado) */
+    .hero-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Alinhamento no topo esquerdo para manter a palavra VOLKA resguardada */
+      object-position: left top;
+      z-index: 1;
+      transform: scale(1);
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Micro-overlay de iluminação editorial */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 10% 10%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.5) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Margem de respiro transparente sobre o topo da imagem para o logo VOLKA */
+    .safety-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(2rem, 5vw, 4rem);
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .b2b-badge {
+      pointer-events: auto;
+      background: rgba(18, 17, 16, 0.4);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .b2b-badge:hover {
+      background: rgba(30, 28, 26, 0.85);
+      color: var(--text-light);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-gold);
+      animation: pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Botão flutuante inferior para fornecedores/parceiros */
+    .b2b-trigger-wrapper {
+      position: absolute;
+      bottom: clamp(1.5rem, 4vw, 3rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .btn-b2b-action {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--text-light);
+      padding: 0.85rem 1.8rem;
+      border-radius: 9999px;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: var(--glass-shadow);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-b2b-action:hover {
+      background: rgba(255, 255, 255, 0.95);
+      color: #000;
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Modal / Overlay Flutuante B2B */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 460px;
+      background: rgba(18, 17, 16, 0.9);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: var(--glass-shadow);
+      position: relative;
+      transform: translateY(20px) scale(0.96);
+      transition: var(--transition-smooth);
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .modal-close:hover {
+      color: var(--text-light);
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-gold);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--text-light);
+      color: #000;
+      border: none;
+      padding: 0.95rem;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-gold);
+      color: #000;
+    }
+
+    .form-feedback {
+      display: none;
+      font-size: 0.82rem;
+      color: var(--accent-gold);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    /* Ajustes específicos para telas ultra-estreitas/móveis */
+    @media (max-width: 640px) {
+      .hero-img {
+        /* Para mobile, ajusta sutilmente a posição do foco */
+        object-position: 18% top;
+      }
+      .b2b-badge span:last-child {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="hero-viewport" role="main">
+    
+    <!-- Imagem em Fullscreen 100vw x 100vh de lado a lado -->
+    <img 
+      src="assets/hero.png" 
+      alt="VOLKA - Look Again. Coming Soon" 
+      class="hero-img"
+      id="heroImg"
+      loading="eager"
+    >
+
+    <!-- Overlay editorial -->
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- Header Transparente com respiro para assegurar visibilidade do topo -->
+   
+
+    <!-- Trigger de Ação Flutuante no Rodapé Central -->
+    <div class="b2b-trigger-wrapper">
+      <button class="btn-b2b-action" onclick="openModal()">
+        <span>Sign up</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Modal / Modal Glassmorphism para Contato/Feira -->
+  <div class="modal-backdrop" id="b2bModal" onclick="handleBackdropClick(event)">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar">&times;</button>
+      
+      <h2 class="modal-title">Contato Institucional</h2>
+      <p class="modal-subtitle">Cadastre seu e-mail corporativo ou empresa para agendamento de reuniões na feira e fornecimento.</p>
+
+      <form id="b2bForm" onsubmit="submitB2BForm(event)">
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-input" 
+            placeholder="Nome da empresa / Fornecedor" 
+            required
+          >
+          <input 
+            type="email" 
+            class="form-input" 
+            placeholder="E-mail corporativo" 
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Solicitar Contato Comercial
+        </button>
+      </form>
+
+      <p id="feedbackMsg" class="form-feedback">Solicitação enviada! Entraremos em contato em breve.</p>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('b2bModal');
+    const form = document.getElementById('b2bForm');
+    const feedback = document.getElementById('feedbackMsg');
+
+    function openModal() {
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    }
+
+    function submitB2BForm(e) {
+      e.preventDefault();
+      feedback.style.display = 'block';
+      form.reset();
+      
+      setTimeout(() => {
+        closeModal();
+        feedback.style.display = 'none';
+      }, 3000);
+    }
+
+    // Suporte para fechar com a tecla ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
